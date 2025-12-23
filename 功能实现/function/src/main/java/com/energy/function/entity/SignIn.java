@@ -13,9 +13,9 @@ public class SignIn {
 
     @Column(nullable = false)
     private Long userId;   //关联用户ID
-//
-//    @Column(nullable = false)
-//    private Long courseId;  //课程ID
+
+    @Column(nullable = false)
+    private Long courseId;  //课程ID
 
     @Column(nullable = false)
     private String signInCode;   //2FAS签到码

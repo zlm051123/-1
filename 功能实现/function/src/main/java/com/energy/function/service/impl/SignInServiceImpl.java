@@ -5,6 +5,7 @@ import com.energy.function.entity.SignIn;
 import com.energy.function.entity.User;
 import com.energy.function.repository.SignInRepository;
 import com.energy.function.repository.UserRepository;
+import com.energy.function.service.CourseRecordService;
 import com.energy.function.service.SignInService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class SignInServiceImpl implements SignInService {
 
     private final SignInRepository signInRepository;
     private final UserRepository userRepository;
+    private final CourseRecordService courseRecordService;
 
 //    public SignInServiceImpl(SignInRepository signInRepository, UserRepository userRepository) {
 //        this.signInRepository = signInRepository;
@@ -40,17 +42,22 @@ public class SignInServiceImpl implements SignInService {
         // 构建签到记录
         SignIn signIn = new SignIn();
         signIn.setUserId(dto.getUserId());
-//        signIn.setCourseId(dto.getCourseId());
+        signIn.setCourseId(dto.getCourseId());
         signIn.setSignInCode(dto.getSignInCode());
         signIn.setSeatNumber(dto.getSeatNumber());
         signIn.setSignInTime(LocalDateTime.now().toString());
         signIn.setGroupId(user.getGroupId());
 
+        //同步保存课程记录
+        courseRecordService.saveCourseRecord(dto.getUserId(), dto.getCourseId());
         return signInRepository.save(signIn);
+
+
     }
 
     @Override
     public List<SignIn> getGroupSignIn(String groupId) {
+
         return signInRepository.findByGroupId(groupId);
     }
 
